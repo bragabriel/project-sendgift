@@ -1,6 +1,6 @@
 package com.gabriel.sendgift.core.adapter;
 
-import com.gabriel.sendgift.core.domain.entity.Address;
+import com.gabriel.sendgift.core.domain.dto.AddressExternalResponse;
 import com.gabriel.sendgift.core.interfaces.AddressExternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +15,8 @@ public class ViaCEPAdapter implements AddressExternalService {
     private static final String VIA_CEP_URL = "https://viacep.com.br/ws/";
 
     @Override
-    public Address getAddressByCep(String cep) {
+    public AddressExternalResponse getAddressByCep(String cep) {
         String url = VIA_CEP_URL + cep + "/json";
-        return restTemplate.getForObject(url, Address.class);
+        return restTemplate.getForObject(url, AddressExternalResponse.class);
     }
 }

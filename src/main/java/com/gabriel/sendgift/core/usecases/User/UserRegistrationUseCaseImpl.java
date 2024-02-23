@@ -1,5 +1,6 @@
 package com.gabriel.sendgift.core.usecases.User;
 
+import com.gabriel.sendgift.core.domain.dto.AddressExternalResponse;
 import com.gabriel.sendgift.core.interfaces.AddressExternalService;
 import com.gabriel.sendgift.core.domain.entity.Address;
 import com.gabriel.sendgift.core.domain.entity.User;
@@ -17,7 +18,8 @@ public class UserRegistrationUseCaseImpl implements UserRegistrationUseCase {
     public User registerUser(User user) {
         // TODO: Validar dados usuário
 
-        Address address = addressService.getAddressByCep(user.getAddress().getCep());
+        AddressExternalResponse addressExternalResponse = addressService.getAddressByCep(user.getAddress().getCep());
+        Address address = addressExternalResponse.mapToAddress(addressExternalResponse);
 
         user.setAddress(address);
 

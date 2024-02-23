@@ -11,7 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Address {
     private String cep;
-    private String street;
-    private String neighborhood;
-    private String number;
+    private String uf;
+    private String localidade;
+    private String complemento;
+    private String bairro;
+    private String logradouro;
 }

@@ -1,8 +1,7 @@
 package com.gabriel.sendgift.core.interfaces;
 
-import com.gabriel.sendgift.core.domain.entity.Address;
-
+import com.gabriel.sendgift.core.domain.dto.AddressExternalResponse;
 
 public interface AddressExternalService {
-    Address getAddressByCep(String cep);
+    AddressExternalResponse getAddressByCep(String cep);
 }
