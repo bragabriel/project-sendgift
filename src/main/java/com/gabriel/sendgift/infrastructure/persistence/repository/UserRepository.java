@@ -1,4 +1,4 @@
-package com.gabriel.sendgift.core.usecases.repository;
+package com.gabriel.sendgift.infrastructure.persistence.repository;
 
 
 import com.gabriel.sendgift.core.domain.entity.User;
