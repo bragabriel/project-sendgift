@@ -12,7 +12,7 @@ public class MongoDBConfig {
     @Bean
     public MongoDatabaseFactory mongoConfigure(){
         //Returning the instance
-        return new SimpleMongoClientDatabaseFactory("mongodb://root:example@localhost:27017/sendgift");
+        return new SimpleMongoClientDatabaseFactory("mongodb://${DB_USER}:${DB_PASSWORD}@localhost:27017/sendgift");
     }
 
     public MongoTemplate mongoTemplate(){
