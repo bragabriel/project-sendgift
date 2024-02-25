@@ -1,4 +1,4 @@
-package com.gabriel.sendgift.core.domain.entity;
+package com.gabriel.sendgift.core.domain.address;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
+@Document(collection = "addresses")
 public class Address {
     private String cep;
     private String uf;

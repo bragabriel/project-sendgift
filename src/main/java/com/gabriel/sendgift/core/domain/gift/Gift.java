@@ -1,4 +1,4 @@
-package com.gabriel.sendgift.core.domain.entity;
+package com.gabriel.sendgift.core.domain.gift;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
+@Document(collection = "gifts")
 public class Gift {
     @Id
     private String id;
     private String name;
     private String description;
+    private String senderId;
+    private String recipientId;
 }

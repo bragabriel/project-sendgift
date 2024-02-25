@@ -1,4 +1,4 @@
-package com.gabriel.sendgift.core.domain.dto;
+package com.gabriel.sendgift.core.domain.user.dto;
 
 import lombok.Data;
 

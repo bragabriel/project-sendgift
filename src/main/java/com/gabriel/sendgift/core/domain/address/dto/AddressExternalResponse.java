@@ -1,6 +1,6 @@
-package com.gabriel.sendgift.core.domain.dto;
+package com.gabriel.sendgift.core.domain.address.dto;
 
-import com.gabriel.sendgift.core.domain.entity.Address;
+import com.gabriel.sendgift.core.domain.address.Address;
 import lombok.Data;
 
 @Data
