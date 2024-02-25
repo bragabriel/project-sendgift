@@ -23,45 +23,6 @@ No desenvolvimento deste projeto, foram utilizadas as seguintes tecnologias:
 ## Estrutura de Pastas
 A estrutura de pastas do projeto segue os princípios da Clean Architecture, organizando o código em camadas de acordo com suas responsabilidades:
 
-core: <br>
-|- adapter: <br>
-|- domain: <br>
-| |- model: <br>
-| |- repository: <br>
-| |- service: <br>
-|- usercases: <br>
+application: doing <br>
+core: doing<br>
 infrastructure: Contém as implementações concretas de detalhes de infraestrutura, como acesso a banco de dados e comunicação com sistemas externos.
-resources: Contém recursos estáticos, como arquivos de propriedades de configuração.
-
-Aqui está a estrutura completa de pastas do projeto:
-
-```
-projeto/
-│
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   ├── com/
-│   │   │   │   ├── example/
-│   │   │   │   │   ├── core/
-│   │   │   │   │   │   ├── adapter/
-│   │   │   │   │   │   ├── domain/
-│   │   │   │   │   │   │   ├── model/
-│   │   │   │   │   │   │   ├── repository/
-│   │   │   │   │   │   │   └── service/
-│   │   │   │   │   │   └── usercases/
-│   │   │   │   │   ├── infrastructure/
-│   │   │   │   │   │   ├── messaging/
-│   │   │   │   │   │   └── persistence/
-│   │   │   │   │   │   │   ├── mongodb/
-│   │   │   │   │   │   │   └── repository/
-│   │   │   │   └── SendgiftApplication.java
-│   │   │   └── resources/
-│   │   │       ├── application.properties
-│   │   │       └── kafka.properties
-│   │   └── resources/
-│   │       └── static/
-│   └── test/
-│       └── java/
-└── pom.xml
-```
