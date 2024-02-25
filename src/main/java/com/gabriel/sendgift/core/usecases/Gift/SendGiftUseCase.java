@@ -1,2 +1,4 @@
-package com.gabriel.sendgift.core.usecases.Gift;public interface SendGiftUseCase {
+package com.gabriel.sendgift.core.usecases.Gift;
+
+public interface SendGiftUseCase {
 }
