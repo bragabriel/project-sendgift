@@ -1,43 +1,53 @@
 package com.gabriel.sendgift.application.controllers;
 
-import com.gabriel.sendgift.core.domain.dto.UserDto;
-import com.gabriel.sendgift.core.domain.entity.Address;
-import com.gabriel.sendgift.core.domain.entity.User;
-import com.gabriel.sendgift.core.usecases.User.UserRegistrationUseCase;
+import com.gabriel.sendgift.application.services.UserService;
+import com.gabriel.sendgift.core.domain.user.dto.UserDto;
+import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
+import com.gabriel.sendgift.core.domain.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
-    private final UserRegistrationUseCase userRegistrationUseCase;
+    private final UserService userService;
 
-    public UserController(UserRegistrationUseCase userRegistrationUseCase) {
-        this.userRegistrationUseCase = userRegistrationUseCase;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @GetMapping
+    public ResponseEntity<List<User>> getAll(){
+        List<User> users = userService.getAll();
+        return ResponseEntity.ok().body(users);
+    }
+
+    @GetMapping
+    public ResponseEntity<User> getById(@PathVariable("id") String id){
+        User user = userService.getById(id);
+        return ResponseEntity.ok().body(user);
+    }
+
+    @PostMapping()
     public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {
-        User user = mapUserDtoToUser(userDto);
-        var response = userRegistrationUseCase.registerUser(user);
+        User user = User.mapToUser(userDto);
+        var response = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    private User mapUserDtoToUser(UserDto userDto) {
-        User user = new User();
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+    @PutMapping("/{id}")
+    public ResponseEntity<User> update(@PathVariable("id") String id, @RequestBody UserUpdateDto userUpdateDto){
+        User updatedUser = userService.update(id, userUpdateDto);
+        return ResponseEntity.ok().body(updatedUser);
+    }
 
-        Address address = new Address();
-        address.setCep(userDto.getCep());
-        user.setAddress(address);
-
-        return user;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<User> delete(@PathVariable("id") String id){
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
