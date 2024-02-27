@@ -5,14 +5,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@Configuration //Load before initialization
+@Configuration
+@EnableMongoRepositories(basePackages = "com.gabriel.sendgift.core.repositories")
 public class MongoDBConfig {
 
     @Bean
     public MongoDatabaseFactory mongoConfigure(){
+        String user = System.getenv("DB_USER");
+        String password = System.getenv("DB_PASSWORD");
+
         //Returning the instance
-        return new SimpleMongoClientDatabaseFactory("mongodb://${DB_USER}:${DB_PASSWORD}@localhost:27017/sendgift");
+        String uri = "mongodb://" + user + ":" + password + "@localhost:27017/admin";
+        return new SimpleMongoClientDatabaseFactory(uri);
     }
 
     public MongoTemplate mongoTemplate(){
