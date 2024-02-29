@@ -75,10 +75,10 @@ public class UserService implements UserRegistrationUseCase {
     }
 
     public void delete(String id){
-        User category = userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para o ID: " + id));
 
-        userRepository.delete(category);
+        userRepository.delete(user);
     }
 }
 
