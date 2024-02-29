@@ -41,13 +41,13 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> update(@PathVariable("id") String id, @RequestBody UserUpdateDto userUpdateDto){
-        User updatedUser = userService.update(id, userUpdateDto);
+        User updatedUser = userService.updateUser(id, userUpdateDto);
         return ResponseEntity.ok().body(updatedUser);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<User> delete(@PathVariable("id") String id){
-        userService.delete(id);
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 }

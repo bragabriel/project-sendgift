@@ -26,6 +26,7 @@ public class UserService implements UserRegistrationUseCase {
         this.userRepository = userRepository;
     }
 
+    @Override
     public List<User> getAll(){
         List<User> users = userRepository.findAll();
 
@@ -35,6 +36,7 @@ public class UserService implements UserRegistrationUseCase {
         return users;
     }
 
+    @Override
     public User getById(String id){
 
         User user = userRepository.findById(id)
@@ -57,7 +59,8 @@ public class UserService implements UserRegistrationUseCase {
         return user;
     }
 
-    public User update(String id, UserUpdateDto userUpdateDto){
+    @Override
+    public User updateUser(String id, UserUpdateDto userUpdateDto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para o ID: " + id));
 
@@ -74,7 +77,8 @@ public class UserService implements UserRegistrationUseCase {
         return user;
     }
 
-    public void delete(String id){
+    @Override
+    public void deleteUser(String id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para o ID: " + id));
 
