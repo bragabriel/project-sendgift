@@ -5,7 +5,7 @@ import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
 
 import java.util.List;
 
-public interface UserRegistrationUseCase {
+public interface UserBasicsUseCase {
 
     List<User> getAll();
     User getById(String id);

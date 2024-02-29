@@ -7,13 +7,13 @@ import com.gabriel.sendgift.core.interfaces.AddressExternalService;
 import com.gabriel.sendgift.core.domain.address.Address;
 import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.repositories.UserRepository;
-import com.gabriel.sendgift.core.usecases.User.UserRegistrationUseCase;
+import com.gabriel.sendgift.core.usecases.User.UserBasicsUseCase;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService implements UserRegistrationUseCase {
+public class UserService implements UserBasicsUseCase {
 
     private final UserRepository userRepository;
     private final AddressExternalService addressService;
