@@ -27,13 +27,18 @@ public class UserService implements UserRegistrationUseCase {
     }
 
     public List<User> getAll(){
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+
+        if(users.isEmpty())
+            throw new UserNotFoundException("Nenhum usuário cadastrado");
+
+        return users;
     }
 
     public User getById(String id){
 
         User user = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para o ID: " + id));
 
         return user;
     }
@@ -54,7 +59,7 @@ public class UserService implements UserRegistrationUseCase {
 
     public User update(String id, UserUpdateDto userUpdateDto){
         User user = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para o ID: " + id));
 
         if(!userUpdateDto.getName().isEmpty()) user.setName(userUpdateDto.getName());
 
@@ -71,7 +76,7 @@ public class UserService implements UserRegistrationUseCase {
 
     public void delete(String id){
         User category = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para o ID: " + id));
 
         userRepository.delete(category);
     }
