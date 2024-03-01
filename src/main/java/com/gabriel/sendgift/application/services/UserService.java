@@ -2,14 +2,17 @@ package com.gabriel.sendgift.application.services;
 
 import com.gabriel.sendgift.application.exceptions.UserNotFoundException;
 import com.gabriel.sendgift.core.domain.address.dto.AddressExternalResponse;
+import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
 import com.gabriel.sendgift.core.interfaces.AddressExternalService;
 import com.gabriel.sendgift.core.domain.address.Address;
 import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.repositories.UserRepository;
 import com.gabriel.sendgift.core.usecases.User.UserBasicsUseCase;
+import com.gabriel.sendgift.core.usecases.User.UserValidationUseCase;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,43 +21,53 @@ public class UserService implements UserBasicsUseCase {
     private final UserRepository userRepository;
     private final AddressExternalService addressService;
 
+    private List<UserValidationUseCase> validationUseCases;
+
     public UserService(
             AddressExternalService addressService,
-            UserRepository userRepository
+            UserRepository userRepository,
+            List<UserValidationUseCase> validationUseCase
     ) {
         this.addressService = addressService;
         this.userRepository = userRepository;
+        this.validationUseCases = validationUseCase;
     }
 
     @Override
-    public List<User> getAll(){
+    public List<UserResponse> getAll(){
         List<User> users = userRepository.findAll();
 
         if(users.isEmpty())
             throw new UserNotFoundException("Nenhum usuário cadastrado");
 
-        return users;
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (User user : users) {
+            userResponses.add(UserResponse.mapToUserResponse(user));
+        }
+
+        return userResponses;
     }
 
     @Override
-    public User getById(String id){
+    public UserResponse getById(String id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para o ID: " + id));
 
-        return user;
+        return new UserResponse(user);
     }
 
     @Override
-    public User getById(String id, String errorMessage) {
+    public UserResponse getById(String id, String errorMessage) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(errorMessage));
 
-        return user;
+        return new UserResponse(user);
     }
 
     @Override
-    public User registerUser(User user) {
-        // TODO: Validar dados usuário
+    public UserResponse registerUser(User user) {
+        //User validations
+        validationUseCases.forEach(useCase -> useCase.validate(user));
 
         AddressExternalResponse addressExternalResponse = addressService.getAddressByCep(user.getAddress().getCep());
         Address address = AddressExternalResponse.mapToAddress(addressExternalResponse);
@@ -63,11 +76,11 @@ public class UserService implements UserBasicsUseCase {
 
         userRepository.save(user);
 
-        return user;
+        return new UserResponse(user);
     }
 
     @Override
-    public User updateUser(String id, UserUpdateDto userUpdateDto){
+    public UserResponse updateUser(String id, UserUpdateDto userUpdateDto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado para o ID: " + id));
 
@@ -81,7 +94,7 @@ public class UserService implements UserBasicsUseCase {
 
         userRepository.save(user);
 
-        return user;
+        return new UserResponse(user);
     }
 
     @Override

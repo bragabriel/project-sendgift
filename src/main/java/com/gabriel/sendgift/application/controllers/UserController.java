@@ -2,6 +2,7 @@ package com.gabriel.sendgift.application.controllers;
 
 import com.gabriel.sendgift.application.services.UserService;
 import com.gabriel.sendgift.core.domain.user.dto.UserDto;
+import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
 import com.gabriel.sendgift.core.domain.user.User;
 import org.springframework.http.HttpStatus;
@@ -21,27 +22,27 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll(){
-        List<User> users = userService.getAll();
+    public ResponseEntity<List<UserResponse>> getAll(){
+        List<UserResponse> users = userService.getAll();
         return ResponseEntity.ok().body(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable("id") String id){
-        User user = userService.getById(id);
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<UserResponse> getById(@PathVariable("id") String id){
+        UserResponse userResponse = userService.getById(id);
+        return ResponseEntity.ok().body(userResponse);
     }
 
     @PostMapping()
-    public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserResponse> registerUser(@RequestBody UserDto userDto) {
         User user = User.mapToUser(userDto);
-        var response = userService.registerUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        UserResponse userResponse = userService.registerUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable("id") String id, @RequestBody UserUpdateDto userUpdateDto){
-        User updatedUser = userService.updateUser(id, userUpdateDto);
+    public ResponseEntity<UserResponse> update(@PathVariable("id") String id, @RequestBody UserUpdateDto userUpdateDto){
+        UserResponse updatedUser = userService.updateUser(id, userUpdateDto);
         return ResponseEntity.ok().body(updatedUser);
     }
 
