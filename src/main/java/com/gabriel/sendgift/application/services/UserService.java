@@ -48,7 +48,8 @@ public class UserService implements UserBasicsUseCase {
     public User getById(String id, String errorMessage) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(errorMessage));
-        return null;
+
+        return user;
     }
 
     @Override

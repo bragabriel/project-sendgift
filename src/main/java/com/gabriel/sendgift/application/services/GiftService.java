@@ -3,10 +3,8 @@ package com.gabriel.sendgift.application.services;
 import com.gabriel.sendgift.application.exceptions.GiftNotFoundException;
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftUpdateDto;
-import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.repositories.GiftRepository;
 import com.gabriel.sendgift.core.usecases.Gift.GiftBasicsUseCase;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +32,6 @@ public class GiftService implements GiftBasicsUseCase {
     }
 
     public Gift getById(String id){
-
         Gift gift = giftRepository.findById(id)
                 .orElseThrow(() -> new GiftNotFoundException("Presente não encontrado para o ID: " + id));
 
@@ -42,7 +39,6 @@ public class GiftService implements GiftBasicsUseCase {
     }
 
     public Gift registerGift(Gift gift) {
-        //TODO: debug "The given id must not be null"
         userService.getById(gift.getSenderId(), "Remetente não encontrado!");
         userService.getById(gift.getRecipientId(), "Destinatário não encontrado!");
 

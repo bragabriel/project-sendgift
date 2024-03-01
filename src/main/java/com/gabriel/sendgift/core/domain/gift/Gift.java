@@ -4,7 +4,6 @@ import com.gabriel.sendgift.core.domain.gift.dto.GiftDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -24,6 +23,7 @@ public class Gift {
         Gift gift = new Gift();
         gift.setName(giftDto.getName());
         gift.setDescription(giftDto.getDescription());
+        gift.setSenderId(giftDto.getSenderId());
         gift.setRecipientId(giftDto.getRecipientId());
         return gift;
     }
