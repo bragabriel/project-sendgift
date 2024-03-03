@@ -1,18 +1,25 @@
 package com.gabriel.sendgift.application.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gabriel.sendgift.application.exceptions.GiftNotFoundException;
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftUpdateDto;
 import com.gabriel.sendgift.core.repositories.GiftRepository;
 import com.gabriel.sendgift.core.usecases.Gift.GiftBasicsUseCase;
+import com.gabriel.sendgift.core.usecases.Gift.GiftDeliveryUseCase;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class GiftServiceImpl implements GiftBasicsUseCase {
+public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
     private final GiftRepository giftRepository;
     private final UserServiceImpl userServiceImpl;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public GiftServiceImpl(
             GiftRepository giftRepository,
@@ -67,5 +74,20 @@ public class GiftServiceImpl implements GiftBasicsUseCase {
                 .orElseThrow(() -> new GiftNotFoundException("Presente não encontrado para o ID: " + id));
 
         giftRepository.delete(gift);
+    }
+
+    @KafkaListener(topics = "deliveryGift-topic", groupId = "group-1")
+    public void receiveGift(String messageJson) { //Gift Consumer
+        try {
+            Gift gift = objectMapper.readValue(messageJson, Gift.class);
+            System.out.println(
+                    "Consumer gift: " + gift.getName() + "\n" +
+                    "Descrição: " + gift.getDescription() + "\n" +
+                    "Remetente: " + gift.getSenderId() + "\n" +
+                    "Destinatário: " + gift.getRecipientId()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

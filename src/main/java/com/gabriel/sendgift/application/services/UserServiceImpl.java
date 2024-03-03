@@ -20,7 +20,6 @@ public class UserServiceImpl implements UserBasicsUseCase {
 
     private final UserRepository userRepository;
     private final AddressExternalService addressService;
-
     private List<UserValidationUseCase> validationUseCases;
 
     public UserServiceImpl(
