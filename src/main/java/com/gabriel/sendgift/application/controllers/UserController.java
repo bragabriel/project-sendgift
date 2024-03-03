@@ -1,6 +1,6 @@
 package com.gabriel.sendgift.application.controllers;
 
-import com.gabriel.sendgift.application.services.UserService;
+import com.gabriel.sendgift.application.services.UserServiceImpl;
 import com.gabriel.sendgift.core.domain.user.dto.UserDto;
 import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
@@ -15,40 +15,40 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
     }
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAll(){
-        List<UserResponse> users = userService.getAll();
+        List<UserResponse> users = userServiceImpl.getAll();
         return ResponseEntity.ok().body(users);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable("id") String id){
-        UserResponse userResponse = userService.getById(id);
+        UserResponse userResponse = userServiceImpl.getById(id);
         return ResponseEntity.ok().body(userResponse);
     }
 
     @PostMapping()
     public ResponseEntity<UserResponse> registerUser(@RequestBody UserDto userDto) {
         User user = User.mapToUser(userDto);
-        UserResponse userResponse = userService.registerUser(user);
+        UserResponse userResponse = userServiceImpl.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable("id") String id, @RequestBody UserUpdateDto userUpdateDto){
-        UserResponse updatedUser = userService.updateUser(id, userUpdateDto);
+        UserResponse updatedUser = userServiceImpl.updateUser(id, userUpdateDto);
         return ResponseEntity.ok().body(updatedUser);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<User> delete(@PathVariable("id") String id){
-        userService.deleteUser(id);
+        userServiceImpl.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 }

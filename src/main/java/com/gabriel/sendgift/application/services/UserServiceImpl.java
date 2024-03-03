@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserService implements UserBasicsUseCase {
+public class UserServiceImpl implements UserBasicsUseCase {
 
     private final UserRepository userRepository;
     private final AddressExternalService addressService;
 
     private List<UserValidationUseCase> validationUseCases;
 
-    public UserService(
+    public UserServiceImpl(
             AddressExternalService addressService,
             UserRepository userRepository,
             List<UserValidationUseCase> validationUseCase

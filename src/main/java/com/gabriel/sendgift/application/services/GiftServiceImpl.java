@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class GiftService implements GiftBasicsUseCase {
+public class GiftServiceImpl implements GiftBasicsUseCase {
     private final GiftRepository giftRepository;
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
-    public GiftService(
+    public GiftServiceImpl(
             GiftRepository giftRepository,
-            UserService userService
+            UserServiceImpl userServiceImpl
     ) {
         this.giftRepository = giftRepository;
-        this.userService = userService;
+        this.userServiceImpl = userServiceImpl;
     }
 
     public List<Gift> getAll(){
@@ -39,8 +39,8 @@ public class GiftService implements GiftBasicsUseCase {
     }
 
     public Gift registerGift(Gift gift) {
-        userService.getById(gift.getSenderId(), "Remetente não encontrado!");
-        userService.getById(gift.getRecipientId(), "Destinatário não encontrado!");
+        userServiceImpl.getById(gift.getSenderId(), "Remetente não encontrado!");
+        userServiceImpl.getById(gift.getRecipientId(), "Destinatário não encontrado!");
 
         giftRepository.save(gift);
 
