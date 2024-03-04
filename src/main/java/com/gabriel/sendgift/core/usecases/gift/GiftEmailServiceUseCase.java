@@ -1,4 +1,4 @@
-package com.gabriel.sendgift.core.usecases.Gift;
+package com.gabriel.sendgift.core.usecases.gift;
 
 import com.gabriel.sendgift.core.domain.gift.Gift;
 

@@ -4,12 +4,12 @@ import com.gabriel.sendgift.application.exceptions.UserNotFoundException;
 import com.gabriel.sendgift.core.domain.address.dto.AddressExternalResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
-import com.gabriel.sendgift.core.interfaces.AddressExternalService;
+import com.gabriel.sendgift.core.usecases.address.AddressExternalServiceUseCase;
 import com.gabriel.sendgift.core.domain.address.Address;
 import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.repositories.UserRepository;
-import com.gabriel.sendgift.core.usecases.User.UserBasicsUseCase;
-import com.gabriel.sendgift.core.usecases.User.UserValidationUseCase;
+import com.gabriel.sendgift.core.usecases.user.UserBasicsUseCase;
+import com.gabriel.sendgift.core.usecases.user.UserValidationUseCase;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,11 +19,11 @@ import java.util.List;
 public class UserServiceImpl implements UserBasicsUseCase {
 
     private final UserRepository userRepository;
-    private final AddressExternalService addressService;
+    private final AddressExternalServiceUseCase addressService;
     private List<UserValidationUseCase> validationUseCases;
 
     public UserServiceImpl(
-            AddressExternalService addressService,
+            AddressExternalServiceUseCase addressService,
             UserRepository userRepository,
             List<UserValidationUseCase> validationUseCase
     ) {

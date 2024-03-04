@@ -1,8 +1,7 @@
-package com.gabriel.sendgift.core.usecases.Gift;
+package com.gabriel.sendgift.core.usecases.gift;
 
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftUpdateDto;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 

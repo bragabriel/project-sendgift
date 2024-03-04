@@ -1,13 +1,13 @@
 package com.gabriel.sendgift.core.adapter;
 
 import com.gabriel.sendgift.core.domain.address.dto.AddressExternalResponse;
-import com.gabriel.sendgift.core.interfaces.AddressExternalService;
+import com.gabriel.sendgift.core.usecases.address.AddressExternalServiceUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class ViaCEPAdapter implements AddressExternalService {
+public class ViaCEPAdapter implements AddressExternalServiceUseCase {
 
     //TODO: Aplicar práticas de resiliência
     @Autowired

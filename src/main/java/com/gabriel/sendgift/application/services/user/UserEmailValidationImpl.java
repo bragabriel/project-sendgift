@@ -3,7 +3,7 @@ package com.gabriel.sendgift.application.services.user;
 import com.gabriel.sendgift.application.exceptions.EmailAlreadyExistsException;
 import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.repositories.UserRepository;
-import com.gabriel.sendgift.core.usecases.User.UserValidationUseCase;
+import com.gabriel.sendgift.core.usecases.user.UserValidationUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

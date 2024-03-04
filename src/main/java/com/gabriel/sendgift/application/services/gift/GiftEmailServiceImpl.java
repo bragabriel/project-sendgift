@@ -2,7 +2,7 @@ package com.gabriel.sendgift.application.services.gift;
 
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.repositories.GiftRepository;
-import com.gabriel.sendgift.core.usecases.Gift.GiftEmailServiceUseCase;
+import com.gabriel.sendgift.core.usecases.gift.GiftEmailServiceUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
