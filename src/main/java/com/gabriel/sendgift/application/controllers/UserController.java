@@ -1,6 +1,6 @@
 package com.gabriel.sendgift.application.controllers;
 
-import com.gabriel.sendgift.application.services.UserServiceImpl;
+import com.gabriel.sendgift.application.services.user.UserServiceImpl;
 import com.gabriel.sendgift.core.domain.user.dto.UserDto;
 import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;

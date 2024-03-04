@@ -1,7 +1,8 @@
-package com.gabriel.sendgift.application.services;
+package com.gabriel.sendgift.application.services.gift;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gabriel.sendgift.application.exceptions.GiftNotFoundException;
+import com.gabriel.sendgift.application.services.user.UserServiceImpl;
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftUpdateDto;
 import com.gabriel.sendgift.core.repositories.GiftRepository;

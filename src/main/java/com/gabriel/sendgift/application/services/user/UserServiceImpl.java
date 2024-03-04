@@ -1,4 +1,4 @@
-package com.gabriel.sendgift.application.services;
+package com.gabriel.sendgift.application.services.user;
 
 import com.gabriel.sendgift.application.exceptions.UserNotFoundException;
 import com.gabriel.sendgift.core.domain.address.dto.AddressExternalResponse;

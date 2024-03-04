@@ -1,13 +1,14 @@
-package com.gabriel.sendgift.core.usecases.User;
+package com.gabriel.sendgift.application.services.user;
 
 import com.gabriel.sendgift.application.exceptions.EmailAlreadyExistsException;
 import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.repositories.UserRepository;
+import com.gabriel.sendgift.core.usecases.User.UserValidationUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserEmailValidationUseCase implements UserValidationUseCase {
+public class UserEmailValidationImpl implements UserValidationUseCase {
 
     @Autowired
     private UserRepository userRepository;

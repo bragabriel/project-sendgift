@@ -1,4 +1,4 @@
-package com.gabriel.sendgift.application.services;
+package com.gabriel.sendgift.application.services.gift;
 
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.repositories.GiftRepository;

@@ -1,11 +1,12 @@
-package com.gabriel.sendgift.core.usecases.User;
+package com.gabriel.sendgift.application.services.user;
 
 import com.gabriel.sendgift.application.exceptions.InvalidPasswordException;
 import com.gabriel.sendgift.core.domain.user.User;
+import com.gabriel.sendgift.core.usecases.User.UserValidationUseCase;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserPasswordValidationUseCase implements UserValidationUseCase {
+public class UserPasswordValidationImpl implements UserValidationUseCase {
 
     @Override
     public void validate(User user) {

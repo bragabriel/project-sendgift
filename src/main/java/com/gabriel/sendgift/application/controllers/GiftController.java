@@ -1,7 +1,7 @@
 package com.gabriel.sendgift.application.controllers;
 
-import com.gabriel.sendgift.application.services.GiftServiceImpl;
-import com.gabriel.sendgift.application.services.GiftEmailServiceImpl;
+import com.gabriel.sendgift.application.services.gift.GiftServiceImpl;
+import com.gabriel.sendgift.application.services.gift.GiftEmailServiceImpl;
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftDto;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftUpdateDto;
