@@ -1,11 +1,11 @@
 package com.gabriel.sendgift.application.services.user;
 
 import com.gabriel.sendgift.application.exceptions.UserNotFoundException;
+import com.gabriel.sendgift.core.adapter.AddressClient;
 import com.gabriel.sendgift.core.domain.address.dto.AddressExternalResponse;
 import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
-import com.gabriel.sendgift.core.usecases.address.AddressExternalServiceUseCase;
 import com.gabriel.sendgift.core.repositories.UserRepository;
 import com.gabriel.sendgift.core.usecases.user.UserValidationUseCase;
 import com.gabriel.sendgift.fixture.user.UserFixture;
@@ -33,7 +33,7 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private AddressExternalServiceUseCase addressService;
+    private AddressClient addressService;
 
     @Mock
     private List<UserValidationUseCase> validationUseCases;

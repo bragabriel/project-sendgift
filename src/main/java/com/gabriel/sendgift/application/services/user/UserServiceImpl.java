@@ -1,10 +1,10 @@
 package com.gabriel.sendgift.application.services.user;
 
 import com.gabriel.sendgift.application.exceptions.UserNotFoundException;
+import com.gabriel.sendgift.core.adapter.AddressClient;
 import com.gabriel.sendgift.core.domain.address.dto.AddressExternalResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
-import com.gabriel.sendgift.core.usecases.address.AddressExternalServiceUseCase;
 import com.gabriel.sendgift.core.domain.address.Address;
 import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.repositories.UserRepository;
@@ -16,18 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserBasicsUseCase {
+public class UserServiceImpl implements UserBasicsUseCase{
 
     private final UserRepository userRepository;
-    private final AddressExternalServiceUseCase addressService;
+    public final AddressClient addressClient;
     private List<UserValidationUseCase> validationUseCases;
 
     public UserServiceImpl(
-            AddressExternalServiceUseCase addressService,
+            AddressClient addressClient,
             UserRepository userRepository,
             List<UserValidationUseCase> validationUseCase
     ) {
-        this.addressService = addressService;
+        this.addressClient = addressClient;
         this.userRepository = userRepository;
         this.validationUseCases = validationUseCase;
     }
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserBasicsUseCase {
         //User validations
         validationUseCases.forEach(useCase -> useCase.validate(user));
 
-        AddressExternalResponse addressExternalResponse = addressService.getAddressByCep(user.getAddress().getCep());
+        AddressExternalResponse addressExternalResponse = addressClient.getAddressByCep(user.getAddress().getCep());
         Address address = AddressExternalResponse.mapToAddress(addressExternalResponse);
 
         user.setAddress(address);
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserBasicsUseCase {
         if(!userUpdateDto.getName().isEmpty()) user.setName(userUpdateDto.getName());
 
         if(!userUpdateDto.getCep().isEmpty()){
-            AddressExternalResponse addressExternalResponse = addressService.getAddressByCep(userUpdateDto.getCep());
+            AddressExternalResponse addressExternalResponse = addressClient.getAddressByCep(userUpdateDto.getCep());
             Address address = AddressExternalResponse.mapToAddress(addressExternalResponse);
             user.setAddress(address);
         }
