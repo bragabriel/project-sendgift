@@ -56,6 +56,13 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
+		<!-- Open Feign -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+
 		<!-- Tests -->
 		<dependency>
 			<groupId>org.junit.platform</groupId>
