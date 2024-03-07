@@ -7,6 +7,7 @@ import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.domain.user.dto.UserUpdateDto;
 import com.gabriel.sendgift.core.usecases.address.AddressExternalServiceUseCase;
 import com.gabriel.sendgift.core.repositories.UserRepository;
+import com.gabriel.sendgift.core.usecases.user.UserValidationUseCase;
 import com.gabriel.sendgift.fixture.user.UserFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +34,9 @@ public class UserServiceImplTest {
     private UserRepository userRepository;
     @Mock
     private AddressExternalServiceUseCase addressService;
+
+    @Mock
+    private List<UserValidationUseCase> validationUseCases;
 
     @Test
     void getAllUsers_shouldReturnAllUsers() {
