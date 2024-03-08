@@ -65,4 +65,16 @@ public class GiftController {
         //Outros serviços: chamada do serviço de embalagem do gift
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @GetMapping("/myGiftsSent/{idUser}")
+    public ResponseEntity<List<Gift>> giftsSent(@PathVariable("idUser") String idUser){
+        List<Gift> gifts = giftService.getGiftsSentByIdUser(idUser);
+        return ResponseEntity.ok().body(gifts);
+    }
+
+    @GetMapping("/myGiftsReceived/{idUser}")
+    public ResponseEntity<List<Gift>> giftsReceived(@PathVariable("idUser") String idUser){
+        List<Gift> gifts = giftService.getGiftsReceivedByIdUser(idUser);
+        return ResponseEntity.ok().body(gifts);
+    }
 }

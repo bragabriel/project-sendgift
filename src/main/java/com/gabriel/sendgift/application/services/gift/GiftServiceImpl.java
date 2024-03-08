@@ -5,6 +5,8 @@ import com.gabriel.sendgift.application.exceptions.GiftNotFoundException;
 import com.gabriel.sendgift.application.services.user.UserServiceImpl;
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftUpdateDto;
+import com.gabriel.sendgift.core.domain.user.User;
+import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.repositories.GiftRepository;
 import com.gabriel.sendgift.core.usecases.gift.GiftBasicsUseCase;
 import com.gabriel.sendgift.core.usecases.gift.GiftDeliveryUseCase;
@@ -75,6 +77,24 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
                 .orElseThrow(() -> new GiftNotFoundException("Presente não encontrado para o ID: " + id));
 
         giftRepository.delete(gift);
+    }
+
+    @Override
+    public List<Gift> getGiftsSentByIdUser(String idUser) {
+        List<Gift> gifts = giftRepository.findAllBySenderId(idUser);
+        if (gifts.isEmpty()) {
+            throw new GiftNotFoundException("Nenhum presente encontrado para o ID do remetente: " + idUser);
+        }
+        return gifts;
+    }
+
+    @Override
+    public List<Gift> getGiftsReceivedByIdUser(String idUser) {
+        List<Gift> gifts = giftRepository.findAllByRecipientId(idUser);
+        if (gifts.isEmpty()) {
+            throw new GiftNotFoundException("Nenhum presente encontrado para o ID do destinatário: " + idUser);
+        }
+        return gifts;
     }
 
     @KafkaListener(topics = "deliveryGift-topic", groupId = "group-1")

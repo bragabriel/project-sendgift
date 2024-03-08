@@ -11,4 +11,6 @@ public interface GiftBasicsUseCase {
     Gift registerGift(Gift gift);
     Gift updateGift(String id, GiftUpdateDto giftUpdateDto);
     void deleteGift(String id);
+    List<Gift> getGiftsSentByIdUser(String idUser);
+    List<Gift> getGiftsReceivedByIdUser(String idUser);
 }
