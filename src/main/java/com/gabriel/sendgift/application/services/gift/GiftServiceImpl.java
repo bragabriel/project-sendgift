@@ -3,6 +3,8 @@ package com.gabriel.sendgift.application.services.gift;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gabriel.sendgift.application.exceptions.GiftNotFoundException;
 import com.gabriel.sendgift.application.services.user.UserServiceImpl;
+import com.gabriel.sendgift.core.adapter.EmailClient;
+import com.gabriel.sendgift.core.domain.email.EmailDTO;
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftUpdateDto;
 import com.gabriel.sendgift.core.domain.user.User;
@@ -10,6 +12,7 @@ import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.repositories.GiftRepository;
 import com.gabriel.sendgift.core.usecases.gift.GiftBasicsUseCase;
 import com.gabriel.sendgift.core.usecases.gift.GiftDeliveryUseCase;
+import com.gabriel.sendgift.infrastructure.messaging.kafka.GiftProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -20,16 +23,22 @@ import java.util.List;
 public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
     private final GiftRepository giftRepository;
     private final UserServiceImpl userServiceImpl;
+    public final EmailClient emailClient;
+    private final GiftProducer giftProducer;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     public GiftServiceImpl(
             GiftRepository giftRepository,
-            UserServiceImpl userServiceImpl
+            UserServiceImpl userServiceImpl,
+            EmailClient emailClient,
+            GiftProducer giftProducer
     ) {
         this.giftRepository = giftRepository;
         this.userServiceImpl = userServiceImpl;
+        this.emailClient = emailClient;
+        this.giftProducer = giftProducer;
     }
 
     public List<Gift> getAll(){
@@ -97,6 +106,20 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
         return gifts;
     }
 
+    @Override
+    public void sendGift(String idGift) {
+        Gift gift = giftRepository.findById(idGift)
+                .orElseThrow(() -> new GiftNotFoundException("Presente não encontrado para o ID: " + idGift));
+
+        giftProducer.sendGift("deliveryGift-topic", gift);
+
+        //TODO: Checar - disparo do email depois do gift já na fila kafka
+        EmailDTO email = giftSentEmailConfirmation(gift);
+        emailClient.giftSentEmailConfirmation(email);
+
+        //Outros serviços: chamada do serviço de embalagem do gift
+    }
+
     @KafkaListener(topics = "deliveryGift-topic", groupId = "group-1")
     public void receiveGift(String messageJson) { //Gift Consumer
         try {
@@ -110,5 +133,15 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private EmailDTO giftSentEmailConfirmation(Gift gift){
+
+        UserResponse sender = userServiceImpl.getById(gift.getSenderId());
+        UserResponse recipient = userServiceImpl.getById(gift.getRecipientId());
+
+        EmailDTO emailDTO = new EmailDTO(sender.getName(), recipient.getName(), sender.getEmail());
+
+        return emailDTO;
     }
 }

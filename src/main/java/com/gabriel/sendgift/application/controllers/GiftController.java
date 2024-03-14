@@ -59,10 +59,7 @@ public class GiftController {
 
     @PostMapping("/sendGift")
     public ResponseEntity send(@RequestBody String id) {
-        Gift gift = giftService.getById(id);
-        giftProducer.sendGift("deliveryGift-topic", gift);
-        giftEmailService.sendEmail(gift); //disparo de e-mail de confirmação de sucesso ao usuário
-        //Outros serviços: chamada do serviço de embalagem do gift
+        giftService.sendGift(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
