@@ -7,7 +7,6 @@ import com.gabriel.sendgift.core.adapter.EmailClient;
 import com.gabriel.sendgift.core.domain.email.EmailDTO;
 import com.gabriel.sendgift.core.domain.gift.Gift;
 import com.gabriel.sendgift.core.domain.gift.dto.GiftUpdateDto;
-import com.gabriel.sendgift.core.domain.user.User;
 import com.gabriel.sendgift.core.domain.user.dto.UserResponse;
 import com.gabriel.sendgift.core.repositories.GiftRepository;
 import com.gabriel.sendgift.core.usecases.gift.GiftBasicsUseCase;
@@ -15,6 +14,7 @@ import com.gabriel.sendgift.core.usecases.gift.GiftDeliveryUseCase;
 import com.gabriel.sendgift.infrastructure.messaging.kafka.GiftProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -111,17 +111,11 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
         Gift gift = giftRepository.findById(idGift)
                 .orElseThrow(() -> new GiftNotFoundException("Presente não encontrado para o ID: " + idGift));
 
-        giftProducer.sendGift("deliveryGift-topic", gift);
-
-        //TODO: Checar - disparo do email depois do gift já na fila kafka
-        EmailDTO email = giftSentEmailConfirmation(gift);
-        emailClient.giftSentEmailConfirmation(email);
-
-        //Outros serviços: chamada do serviço de embalagem do gift
+        giftProducer.sendGift("giftReadyToDelivery-topic", gift);
     }
 
-    @KafkaListener(topics = "deliveryGift-topic", groupId = "group-1")
-    public void receiveGift(String messageJson) { //Gift Consumer
+    @KafkaListener(topics = "giftReadyToDelivery-topic", groupId = "group-1")
+    public void processGift(String messageJson) { //Gift Consumer
         try {
             Gift gift = objectMapper.readValue(messageJson, Gift.class);
             System.out.println(
@@ -130,17 +124,59 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
                     "Remetente: " + gift.getSenderId() + "\n" +
                     "Destinatário: " + gift.getRecipientId()
             );
+
+            EmailDTO email = giftConstructorEmailSentConfirmation(gift);
+            emailClient.giftSentEmailConfirmation(email);
+            //Outros serviços: chamada do serviço de embalagem do gift
+
+            // Marcando a mensagem como concluída
+            //acknowledgment.acknowledge();
+
+            //Enviando para o tópico de "Presente Entregue"
+            giftProducer.sendGift("giftDeliveredy-topic", gift);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private EmailDTO giftSentEmailConfirmation(Gift gift){
+    @KafkaListener(topics = "giftDeliveredy-topic", groupId = "group-1")
+    public void isDelivered(String messageJson) { //Gift Consumer
+        try {
+            Gift gift = objectMapper.readValue(messageJson, Gift.class);
+            System.out.println(
+                    "Consumer gift: " + gift.getName() + "\n" +
+                            "Descrição: " + gift.getDescription() + "\n" +
+                            "Remetente: " + gift.getSenderId() + "\n" +
+                            "Destinatário: " + gift.getRecipientId()
+            );
+
+            EmailDTO email = giftConstructorEmailReceivedConfirmation(gift);
+            emailClient.giftReceivedEmailConfirmation(email);
+
+            // Marcando a mensagem como concluída
+            //acknowledgment.acknowledge();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private EmailDTO giftConstructorEmailSentConfirmation(Gift gift){
 
         UserResponse sender = userServiceImpl.getById(gift.getSenderId());
         UserResponse recipient = userServiceImpl.getById(gift.getRecipientId());
 
         EmailDTO emailDTO = new EmailDTO(sender.getName(), recipient.getName(), sender.getEmail());
+
+        return emailDTO;
+    }
+
+    private EmailDTO giftConstructorEmailReceivedConfirmation(Gift gift){
+
+        UserResponse sender = userServiceImpl.getById(gift.getSenderId());
+        UserResponse recipient = userServiceImpl.getById(gift.getRecipientId());
+
+        EmailDTO emailDTO = new EmailDTO(sender.getName(), recipient.getName(), recipient.getEmail());
 
         return emailDTO;
     }
