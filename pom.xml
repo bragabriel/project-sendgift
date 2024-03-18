@@ -110,6 +110,13 @@
 						</goals>
 					</execution>
 					<execution>
+						<id>jacoco-site</id>
+						<phase>package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<execution>
 						<id>default-check</id>
 						<goals>
 							<goal>check</goal>
