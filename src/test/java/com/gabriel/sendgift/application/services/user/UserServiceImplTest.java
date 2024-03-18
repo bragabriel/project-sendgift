@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,15 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void getAllUsers_shouldReturnNoUsersFound() {
+        // Act
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // Assert
+        assertThrows(UserNotFoundException.class, () -> userService.getAll());
+    }
+
+    @Test
     void getById_shouldReturnUserById() {
         // Arrange
         User user = UserFixture.createUser();
@@ -64,6 +74,20 @@ public class UserServiceImplTest {
 
         // Assert
         assertEquals("Gabriel", userResponse.getName());
+    }
+
+    @Test
+    void getByIdOverloaded_shouldReturnUserById() {
+        // Arrange
+        String errorMessage = "Custom error message";
+        User user = UserFixture.createUser();
+
+        // Act
+        when(userRepository.findById("123xd321aA")).thenReturn(Optional.of(user));
+        UserResponse userResponse = userService.getById(user.getId(), errorMessage);
+
+        // Assert
+        assertEquals(user.getId(), userResponse.getId());
     }
 
     @Test
