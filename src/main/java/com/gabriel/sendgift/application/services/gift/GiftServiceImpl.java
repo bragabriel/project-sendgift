@@ -125,7 +125,7 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
                     "Destinatário: " + gift.getRecipientId()
             );
 
-            EmailDTO email = giftConstructorEmailSentConfirmation(gift);
+            EmailDTO email = constructGiftConfirmationEmail(gift, true);
             emailClient.giftSentEmailConfirmation(email);
             //Outros serviços: chamada do serviço de embalagem do gift
 
@@ -151,7 +151,7 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
                             "Destinatário: " + gift.getRecipientId()
             );
 
-            EmailDTO email = giftConstructorEmailReceivedConfirmation(gift);
+            EmailDTO email = constructGiftConfirmationEmail(gift, false);
             emailClient.giftReceivedEmailConfirmation(email);
 
             // Marcando a mensagem como concluída
@@ -161,23 +161,12 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
         }
     }
 
-    private EmailDTO giftConstructorEmailSentConfirmation(Gift gift){
-
+    private EmailDTO constructGiftConfirmationEmail(Gift gift, boolean isSender) {
         UserResponse sender = userServiceImpl.getById(gift.getSenderId());
         UserResponse recipient = userServiceImpl.getById(gift.getRecipientId());
 
-        EmailDTO emailDTO = new EmailDTO(sender.getName(), recipient.getName(), sender.getEmail());
+        String recipientEmail = isSender ? sender.getEmail() : recipient.getEmail();
 
-        return emailDTO;
-    }
-
-    private EmailDTO giftConstructorEmailReceivedConfirmation(Gift gift){
-
-        UserResponse sender = userServiceImpl.getById(gift.getSenderId());
-        UserResponse recipient = userServiceImpl.getById(gift.getRecipientId());
-
-        EmailDTO emailDTO = new EmailDTO(sender.getName(), recipient.getName(), recipient.getEmail());
-
-        return emailDTO;
+        return new EmailDTO(sender.getName(), recipient.getName(), recipientEmail);
     }
 }
