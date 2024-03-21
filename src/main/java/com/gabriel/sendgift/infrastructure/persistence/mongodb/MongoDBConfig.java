@@ -1,5 +1,6 @@
 package com.gabriel.sendgift.infrastructure.persistence.mongodb;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
@@ -11,16 +12,22 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories(basePackages = "com.gabriel.sendgift.core.repositories")
 public class MongoDBConfig {
 
+    @Value("${DB_USER}")
+    private String user;
+    @Value("${DB_PASSWORD}")
+    private String password;
+    @Value("${DB_NAME}")
+    private String database;
+
     @Bean
     public MongoDatabaseFactory mongoConfigure(){
-        String user = System.getenv("DB_USER");
-        String password = System.getenv("DB_PASSWORD");
+        String connectionString = String.format("mongodb://%s:%s@127.0.0.1:27017/%s?authSource=admin",
+                user, password, database);
 
-        //Returning the instance
-        String uri = "mongodb://" + user + ":" + password + "@localhost:27017/admin";
-        return new SimpleMongoClientDatabaseFactory(uri);
+        return new SimpleMongoClientDatabaseFactory(connectionString);
     }
 
+    @Bean
     public MongoTemplate mongoTemplate(){
         return new MongoTemplate(mongoConfigure());
     }

@@ -21,6 +21,7 @@ import java.util.List;
 
 @Service
 public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
+
     private final GiftRepository giftRepository;
     private final UserServiceImpl userServiceImpl;
     public final EmailClient emailClient;
@@ -111,62 +112,6 @@ public class GiftServiceImpl implements GiftBasicsUseCase, GiftDeliveryUseCase {
         Gift gift = giftRepository.findById(idGift)
                 .orElseThrow(() -> new GiftNotFoundException("Presente não encontrado para o ID: " + idGift));
 
-        giftProducer.sendGift("giftReadyToDelivery-topic", gift);
-    }
-
-    @KafkaListener(topics = "giftReadyToDelivery-topic", groupId = "group-1")
-    public void processGift(String messageJson) { //Gift Consumer
-        try {
-            Gift gift = objectMapper.readValue(messageJson, Gift.class);
-            System.out.println(
-                    "Consumer gift: " + gift.getName() + "\n" +
-                    "Descrição: " + gift.getDescription() + "\n" +
-                    "Remetente: " + gift.getSenderId() + "\n" +
-                    "Destinatário: " + gift.getRecipientId()
-            );
-
-            EmailDTO email = constructGiftConfirmationEmail(gift, true);
-            emailClient.giftSentEmailConfirmation(email);
-            //Outros serviços: chamada do serviço de embalagem do gift
-
-            // Marcando a mensagem como concluída
-            //acknowledgment.acknowledge();
-
-            //Enviando para o tópico de "Presente Entregue"
-            giftProducer.sendGift("giftDeliveredy-topic", gift);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @KafkaListener(topics = "giftDeliveredy-topic", groupId = "group-1")
-    public void isDelivered(String messageJson) { //Gift Consumer
-        try {
-            Gift gift = objectMapper.readValue(messageJson, Gift.class);
-            System.out.println(
-                    "Consumer gift: " + gift.getName() + "\n" +
-                            "Descrição: " + gift.getDescription() + "\n" +
-                            "Remetente: " + gift.getSenderId() + "\n" +
-                            "Destinatário: " + gift.getRecipientId()
-            );
-
-            EmailDTO email = constructGiftConfirmationEmail(gift, false);
-            emailClient.giftReceivedEmailConfirmation(email);
-
-            // Marcando a mensagem como concluída
-            //acknowledgment.acknowledge();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private EmailDTO constructGiftConfirmationEmail(Gift gift, boolean isSender) {
-        UserResponse sender = userServiceImpl.getById(gift.getSenderId());
-        UserResponse recipient = userServiceImpl.getById(gift.getRecipientId());
-
-        String recipientEmail = isSender ? sender.getEmail() : recipient.getEmail();
-
-        return new EmailDTO(sender.getName(), recipient.getName(), recipientEmail);
+        giftProducer.sendGift("giftDelivery-topic", gift);
     }
 }
